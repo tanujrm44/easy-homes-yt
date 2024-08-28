@@ -45,7 +45,7 @@ model Images {
   id         Int      @id @default(autoincrement())
   url        String
   property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  propertyId Int      @unique
+  propertyId Int
 }
 
 model Property {
@@ -63,9 +63,10 @@ model Property {
   parking          Parking
   images           Images[]
   preferredTenants PreferredTenants
-  protertyType     PropertyType
+  propertyType     PropertyType
   availableFrom    DateTime
   isFeatured       Boolean          @default(false)
+  savedBy          User[]           @relation("UserSavedProperty")
   isSold           Boolean          @default(false)
   owner            User             @relation(fields: [ownerId], references: [id])
   ownerId          Int
@@ -78,7 +79,8 @@ model User {
   email           String     @unique
   username        String
   image           String?
-  savedProperties Property[]
+  savedProperties Property[] @relation("UserSavedProperty")
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
+  property        Property[]
 }

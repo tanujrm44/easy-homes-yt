@@ -4,7 +4,6 @@ CREATE TABLE `Images` (
     `url` VARCHAR(191) NOT NULL,
     `propertyId` INTEGER NOT NULL,
 
-    UNIQUE INDEX `Images_propertyId_key`(`propertyId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -23,7 +22,7 @@ CREATE TABLE `Property` (
     `area` INTEGER NOT NULL,
     `parking` ENUM('YES', 'NO') NOT NULL,
     `preferredTenants` ENUM('FAMILY', 'BACHELORS') NOT NULL,
-    `protertyType` ENUM('APARTMENT', 'INDEPENDENT') NOT NULL,
+    `propertyType` ENUM('APARTMENT', 'INDEPENDENT') NOT NULL,
     `availableFrom` DATETIME(3) NOT NULL,
     `isFeatured` BOOLEAN NOT NULL DEFAULT false,
     `isSold` BOOLEAN NOT NULL DEFAULT false,
@@ -47,8 +46,23 @@ CREATE TABLE `User` (
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `_UserSavedProperty` (
+    `A` INTEGER NOT NULL,
+    `B` INTEGER NOT NULL,
+
+    UNIQUE INDEX `_UserSavedProperty_AB_unique`(`A`, `B`),
+    INDEX `_UserSavedProperty_B_index`(`B`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- AddForeignKey
 ALTER TABLE `Images` ADD CONSTRAINT `Images_propertyId_fkey` FOREIGN KEY (`propertyId`) REFERENCES `Property`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Property` ADD CONSTRAINT `Property_ownerId_fkey` FOREIGN KEY (`ownerId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `_UserSavedProperty` ADD CONSTRAINT `_UserSavedProperty_A_fkey` FOREIGN KEY (`A`) REFERENCES `Property`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `_UserSavedProperty` ADD CONSTRAINT `_UserSavedProperty_B_fkey` FOREIGN KEY (`B`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
