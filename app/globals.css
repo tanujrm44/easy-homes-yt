@@ -397,7 +397,6 @@ body {
 }
 
 .sticky-column {
-  position: -webkit-sticky; /* For Safari */
   position: sticky;
   top: 0;
   align-self: flex-start;
@@ -406,11 +405,11 @@ body {
 
 @media (min-width: 768px) {
   .scrollable-column {
-    height: 80vh;
+    height: 70vh;
     overflow-y: auto;
   }
 
   .sticky-container {
-    height: 80vh;
+    height: 60vh;
   }
 }

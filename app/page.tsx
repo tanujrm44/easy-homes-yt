@@ -65,7 +65,7 @@ export default async function Homepage() {
           Explore our featured properties that are currently available for sale
           and rent
         </p>
-        <PropertyCards properties={featuredProperties} />
+        <PropertyCards properties={featuredProperties} layout={"vertical"} />
         <Link href={"/properties"} className="flex-center">
           <Button type="primary" className="view-btn" size="large">
             View Properties
