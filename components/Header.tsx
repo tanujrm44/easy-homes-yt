@@ -28,23 +28,26 @@ export default function Header() {
         </div>
         <Button icon={<GoogleOutlined />}>Login or Register</Button>
       </div>
-      <hr />
       {pathname === "/" && (
-        <div className="hero">
-          <h1 className="hero-title">
-            Finding your <span className="color-sec">perfect home</span>{" "}
-          </h1>
-          <p className="hero-subtitle">
-            Search for your perfect home in the best locations around the world
-          </p>
-          <SearchProperties />
-          <Flex justify="center" gap={8}>
-            <Link href={"/properties"}>
-              <Button>Browse Properties</Button>
-            </Link>
-            <Button>List Property</Button>
-          </Flex>
-        </div>
+        <>
+          <hr />
+          <div className="hero">
+            <h1 className="hero-title">
+              Finding your <span className="color-sec">perfect home</span>{" "}
+            </h1>
+            <p className="hero-subtitle">
+              Search for your perfect home in the best locations around the
+              world
+            </p>
+            <SearchProperties />
+            <Flex justify="center" gap={8}>
+              <Link href={"/properties"}>
+                <Button>Browse Properties</Button>
+              </Link>
+              <Button>List Property</Button>
+            </Flex>
+          </div>
+        </>
       )}
     </nav>
   )
