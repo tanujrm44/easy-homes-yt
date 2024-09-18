@@ -4,7 +4,19 @@ import { db } from "@/db"
 import { FilterValues } from "@/types"
 import { Prisma } from "@prisma/client"
 
-async function getProperties(filters: FilterValues) {
+async function getProperties(
+  filters: FilterValues,
+  sortOrder: string,
+  propertyCount: number
+) {
+  const orderBy: Prisma.PropertyOrderByWithRelationInput =
+    sortOrder === "latest"
+      ? { createdAt: "desc" }
+      : sortOrder === "asc" || sortOrder === "desc"
+      ? { price: sortOrder }
+      : (() => {
+          throw new Error("Invalid sort order")
+        })()
   const filterConditions: Prisma.PropertyWhereInput = {
     type: filters.type as Prisma.EnumTypeFilter,
     propertyType: filters.apartment_type as Prisma.EnumPropertyTypeFilter,
@@ -35,7 +47,9 @@ async function getProperties(filters: FilterValues) {
       include: {
         images: true,
       },
+      take: propertyCount,
       where: filterConditions,
+      orderBy,
     })
     return properties
   } catch (error) {

@@ -18,25 +18,36 @@ import {
   Select,
 } from "antd"
 import React, { useEffect, useState } from "react"
+import { LoadingOutlined } from "@ant-design/icons"
 
 export default function Properties() {
   const [sortOrder, setSortOrder] = useState("latest")
   const [properties, setProperties] = useState<PropertyWithImages[]>([])
   const [filters, setFilters] = useState<FilterValues>({})
+  const [propertyCount, setPropertyCount] = useState<number>(10)
+  const [loading, setLoading] = useState(false)
   const [filterForm] = Form.useForm()
 
   useEffect(() => {
     const fetchProperties = async () => {
       try {
-        const properties = await getProperties(filters)
+        setLoading(true)
+        const properties = await getProperties(
+          filters,
+          sortOrder,
+          propertyCount
+        )
         setProperties(properties)
       } catch (error) {
         console.error("Error fetching Properties", error)
+      } finally {
+        setLoading(false)
       }
     }
     fetchProperties()
-  }, [filters])
+  }, [filters, sortOrder, propertyCount])
   console.log(filters)
+
   return (
     <div className="container">
       <h1 className="heading">Properties</h1>
@@ -123,7 +134,9 @@ export default function Properties() {
                 </Form.Item>
                 <Divider />
                 <Flex justify="flex-end" gap={8}>
-                  <Button>Reset</Button>
+                  <Button onClick={() => filterForm.resetFields()}>
+                    Reset
+                  </Button>
                   <Button type="primary" htmlType="submit">
                     Apply
                   </Button>
@@ -146,6 +159,15 @@ export default function Properties() {
               />
             </Form.Item>
             <PropertyCards layout={"horizontal"} properties={properties} />
+            {loading && <LoadingOutlined className="loading" />}
+            <Button
+              type="primary"
+              block
+              className="mt-1"
+              onClick={() => setPropertyCount((prev) => prev + 10)}
+            >
+              Load More
+            </Button>
           </Col>
         </Row>
       </div>
