@@ -1,15 +1,51 @@
 "use client"
 
-import React from "react"
+import React, { useEffect, useState } from "react"
 import logo from "@/public/images/logo.png"
-import { Button, Divider, Flex } from "antd"
+import { Button, Divider, Dropdown, Flex, MenuProps } from "antd"
 import { GoogleOutlined } from "@ant-design/icons"
 import SearchProperties from "./SearchProperties"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
+import {
+  ClientSafeProvider,
+  getProviders,
+  LiteralUnion,
+  signIn,
+  signOut,
+  useSession,
+} from "next-auth/react"
+import Image from "next/image"
 
 export default function Header() {
   const pathname = usePathname()
+  const { data: session } = useSession()
+  const [providers, setProviders] = useState<Record<
+    LiteralUnion<string>,
+    ClientSafeProvider
+  > | null>(null)
+
+  console.log(session)
+
+  useEffect(() => {
+    const setAuthProviders = async () => {
+      const res = await getProviders()
+      setProviders(res)
+    }
+    setAuthProviders()
+  }, [session])
+
+  const items: MenuProps["items"] = [
+    {
+      key: "logout",
+      label: "Logout",
+      danger: true,
+      onClick: () => {
+        signOut()
+      },
+    },
+  ]
+
   return (
     <nav className="nav">
       <div className="flex-between">
@@ -26,7 +62,26 @@ export default function Header() {
             <Button ghost>Properties</Button>
           </Link>
         </div>
-        <Button icon={<GoogleOutlined />}>Login or Register</Button>
+
+        {!session && providers && (
+          <Button
+            icon={<GoogleOutlined />}
+            onClick={() => signIn(providers.google.id)}
+          >
+            Login or Register
+          </Button>
+        )}
+        {session && (
+          <Dropdown menu={{ items }} trigger={["click"]}>
+            <Image
+              src={session?.user?.image as string}
+              width={40}
+              height={40}
+              alt={session?.user?.name || "user"}
+              className="profile-img"
+            />
+          </Dropdown>
+        )}
       </div>
       {pathname === "/" && (
         <>

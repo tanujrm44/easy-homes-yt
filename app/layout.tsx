@@ -6,6 +6,7 @@ import theme from "@/config/themeConfig"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { rubik } from "@/fonts"
+import AuthProvider from "@/components/AuthProvider"
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,15 +21,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={rubik.className}>
-        <ConfigProvider theme={theme}>
-          <AntdRegistry>
-            <div className="main-container">
-              <Header />
-              <main className="flex-grow">{children}</main>
-              <Footer />
-            </div>
-          </AntdRegistry>
-        </ConfigProvider>
+        <AuthProvider>
+          <ConfigProvider theme={theme}>
+            <AntdRegistry>
+              <div className="main-container">
+                <Header />
+                <main className="flex-grow">{children}</main>
+                <Footer />
+              </div>
+            </AntdRegistry>
+          </ConfigProvider>
+        </AuthProvider>
       </body>
     </html>
   )
