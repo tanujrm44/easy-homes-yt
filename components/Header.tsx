@@ -99,7 +99,9 @@ export default function Header() {
               <Link href={"/properties"}>
                 <Button>Browse Properties</Button>
               </Link>
-              <Button>List Property</Button>
+              <Link href={"/properties/add"}>
+                <Button>List Property</Button>
+              </Link>
             </Flex>
           </div>
         </>
