@@ -2,7 +2,7 @@
 
 import { db } from "@/db"
 import { FilterValues } from "@/types"
-import { Prisma } from "@prisma/client"
+import { Prisma, Property } from "@prisma/client"
 
 async function getProperties(
   filters: FilterValues,
@@ -58,4 +58,19 @@ async function getProperties(
   }
 }
 
-export { getProperties }
+async function postProperty(data: Property, userId: string) {
+  try {
+    const response = await db.property.create({
+      data: {
+        ...data,
+        ownerId: +userId,
+      },
+    })
+    return response
+  } catch (error) {
+    console.log("Error creating property", error)
+    throw error
+  }
+}
+
+export { getProperties, postProperty }
