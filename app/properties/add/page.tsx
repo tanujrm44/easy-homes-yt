@@ -12,22 +12,72 @@ import {
   InputNumber,
   Radio,
   Space,
+  Upload,
 } from "antd"
 import { useSession } from "next-auth/react"
-import React from "react"
+import { PlusOutlined } from "@ant-design/icons"
+import React, { useState } from "react"
+import type { GetProp, UploadFile, UploadProps } from "antd"
+import { RcFile } from "antd/es/upload"
+
+type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0]
 
 export default function AddProperty() {
   const { data: session } = useSession()
+  const [fileList, setFileList] = useState<UploadFile[]>([])
 
-  console.log(session)
+  console.log(fileList)
 
   const onFinish = async (values: Property) => {
+    const getBase64 = (file: FileType): Promise<string> =>
+      new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = () => resolve(reader.result as string)
+        reader.onerror = (error) => reject(error)
+      })
     try {
-      const response = await postProperty(values, session?.user?.id)
+      const base64Images = await Promise.all(
+        fileList.map((file) => {
+          const fileToConvert = file.originFileObj as RcFile
+          return getBase64(fileToConvert)
+        })
+      )
+      const response = await postProperty(
+        values,
+        session?.user?.id as string,
+        base64Images
+      )
       console.log(response)
     } catch (error) {
       console.log("Error creating property", error)
     }
+  }
+
+  const uploadButton = (
+    <button style={{ border: 0, background: "none" }} type="button">
+      {<PlusOutlined />}
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </button>
+  )
+
+  const onChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
+    setFileList(newFileList)
+  }
+
+  const handlePreview = async (file: UploadFile) => {
+    let src = file.url as string
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader()
+        reader.readAsDataURL(file.originFileObj as FileType)
+        reader.onload = () => resolve(reader.result as string)
+      })
+    }
+    const image = new Image()
+    image.src = src
+    const imgWindow = window.open(src)
+    imgWindow?.document.write(image.outerHTML)
   }
   return (
     <div className="formContainer">
@@ -176,6 +226,18 @@ export default function AddProperty() {
               <Radio.Button value={"YES"}>Yes</Radio.Button>
               <Radio.Button value={"NO"}>No</Radio.Button>
             </Radio.Group>
+          </Form.Item>
+          <Form.Item label="Upload Images" valuePropName="fileList">
+            <Upload
+              multiple
+              listType="picture-card"
+              beforeUpload={() => false}
+              onChange={onChange}
+              onPreview={handlePreview}
+              fileList={fileList}
+            >
+              {fileList.length >= 8 ? null : uploadButton}
+            </Upload>
           </Form.Item>
           <Form.Item
             label="Preferred Tenants"

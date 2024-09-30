@@ -2,6 +2,7 @@
 
 import { db } from "@/db"
 import { FilterValues } from "@/types"
+import cloudinary from "@/utils/cloudinary"
 import { Prisma, Property } from "@prisma/client"
 
 async function getProperties(
@@ -58,12 +59,22 @@ async function getProperties(
   }
 }
 
-async function postProperty(data: Property, userId: string) {
+async function postProperty(data: Property, userId: string, images: string[]) {
+  const imageUploadPromises = images.map(async (imagesBase64: string) => {
+    const result = await cloudinary.uploader.upload(imagesBase64, {
+      folder: "easyhomes-yt",
+    })
+    return result.url
+  })
   try {
+    const uploadedImages = await Promise.all(imageUploadPromises)
     const response = await db.property.create({
       data: {
         ...data,
         ownerId: +userId,
+        images: {
+          create: uploadedImages.map((url) => ({ url })),
+        },
       },
     })
     return response
