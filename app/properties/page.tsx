@@ -19,6 +19,7 @@ import {
 } from "antd"
 import React, { useEffect, useState } from "react"
 import { LoadingOutlined } from "@ant-design/icons"
+import { useMessage } from "@/context/MessageContext"
 
 export default function Properties() {
   const [sortOrder, setSortOrder] = useState("latest")
@@ -27,6 +28,7 @@ export default function Properties() {
   const [propertyCount, setPropertyCount] = useState<number>(10)
   const [loading, setLoading] = useState(false)
   const [filterForm] = Form.useForm()
+  const { showMessage } = useMessage()
 
   useEffect(() => {
     const fetchProperties = async () => {

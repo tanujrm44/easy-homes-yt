@@ -19,12 +19,14 @@ import { PlusOutlined } from "@ant-design/icons"
 import React, { useState } from "react"
 import type { GetProp, UploadFile, UploadProps } from "antd"
 import { RcFile } from "antd/es/upload"
+import { useMessage } from "@/context/MessageContext"
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0]
 
 export default function AddProperty() {
   const { data: session } = useSession()
   const [fileList, setFileList] = useState<UploadFile[]>([])
+  const { showMessage } = useMessage()
 
   console.log(fileList)
 
@@ -48,8 +50,13 @@ export default function AddProperty() {
         session?.user?.id as string,
         base64Images
       )
-      console.log(response)
+      if (response) {
+        showMessage("Property created successfully", "success")
+        console.log(response)
+      }
     } catch (error) {
+      showMessage("Something went wrong", "error")
+
       console.log("Error creating property", error)
     }
   }
