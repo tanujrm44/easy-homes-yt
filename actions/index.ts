@@ -4,6 +4,7 @@ import { db } from "@/db"
 import { FilterValues } from "@/types"
 import cloudinary from "@/utils/cloudinary"
 import { Prisma, Property } from "@prisma/client"
+import { disconnect } from "process"
 
 async function getProperties(
   filters: FilterValues,
@@ -84,4 +85,59 @@ async function postProperty(data: Property, userId: string, images: string[]) {
   }
 }
 
-export { getProperties, postProperty }
+async function saveProperty(propertyId: number, email: string) {
+  try {
+    const user = await db.user.findUnique({
+      where: { email },
+      include: { savedProperties: true },
+    })
+    if (!user) {
+      throw new Error("User doesn't exist")
+    }
+
+    const isPropertySaved = user.savedProperties.some(
+      (property) => property.id === propertyId
+    )
+
+    const updatedUser = await db.user.update({
+      where: { email },
+      data: {
+        savedProperties: isPropertySaved
+          ? {
+              disconnect: { id: propertyId },
+            }
+          : {
+              connect: { id: propertyId },
+            },
+      },
+    })
+    return {
+      status: isPropertySaved ? "Property unsaved" : "Property saved",
+      user: updatedUser,
+    }
+  } catch (error) {
+    console.error("Error saving property", error)
+  }
+}
+
+async function getUser(userId: number) {
+  try {
+    const user = await db.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        savedProperties: {
+          include: {
+            images: true,
+          },
+        },
+      },
+    })
+    return user
+  } catch (error) {
+    console.error("Error fetching user", error)
+  }
+}
+
+export { getProperties, postProperty, saveProperty, getUser }

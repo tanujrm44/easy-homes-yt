@@ -10,6 +10,7 @@ import {
 } from "@ant-design/icons"
 import { PropertyWithImages } from "@/db"
 import Link from "next/link"
+import SaveProperty from "./SaveProperty"
 
 export default function PropertyCards({
   properties,
@@ -24,6 +25,7 @@ export default function PropertyCards({
         <Row gutter={[16, 16]} wrap>
           {properties.map((property) => (
             <Col xs={24} md={8}>
+              <SaveProperty property={property} />
               <Card hoverable className="p-0 mb-1 pointer">
                 <Carousel
                   arrows
@@ -69,6 +71,8 @@ export default function PropertyCards({
           <Card hoverable className="p-0 mb-1 pointer">
             <Row gutter={[16, 16]} wrap>
               <Col xs={24} md={8}>
+                <SaveProperty property={property} />
+
                 <Carousel
                   arrows
                   style={{

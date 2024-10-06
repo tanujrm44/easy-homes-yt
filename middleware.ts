@@ -4,7 +4,6 @@ const protectedRoutes = ["/properties/add"]
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("next-auth.session-token")?.value
-  console.log(token)
 
   const isProtectedRoute = protectedRoutes.includes(req.nextUrl.pathname)
 
