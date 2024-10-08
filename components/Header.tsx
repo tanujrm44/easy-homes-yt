@@ -5,7 +5,7 @@ import logo from "@/public/images/logo.png"
 import { Button, Divider, Dropdown, Flex, MenuProps } from "antd"
 import { GoogleOutlined } from "@ant-design/icons"
 import SearchProperties from "./SearchProperties"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import Link from "next/link"
 import {
   ClientSafeProvider,
@@ -19,6 +19,7 @@ import Image from "next/image"
 
 export default function Header() {
   const pathname = usePathname()
+  const router = useRouter()
   const { data: session } = useSession()
   const [providers, setProviders] = useState<Record<
     LiteralUnion<string>,
@@ -36,6 +37,13 @@ export default function Header() {
   }, [session])
 
   const items: MenuProps["items"] = [
+    {
+      key: "saved-properties",
+      label: "Saved Properties",
+      onClick: () => {
+        router.push("saved-properties")
+      },
+    },
     {
       key: "logout",
       label: "Logout",
