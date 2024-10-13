@@ -60,7 +60,14 @@ export default function PropertyCards({
                   )}
                 </Carousel>
                 <div className="p-1">
-                  <PropertyContent property={property} />
+                  <Link
+                    href={`properties/${property.id}`}
+                    style={{
+                      color: "black",
+                    }}
+                  >
+                    <PropertyContent property={property} />
+                  </Link>
                 </div>
               </Card>
             </Col>

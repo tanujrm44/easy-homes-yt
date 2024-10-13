@@ -140,4 +140,19 @@ async function getUser(userId: number) {
   }
 }
 
-export { getProperties, postProperty, saveProperty, getUser }
+async function getPropertyById(id: number) {
+  try {
+    const response = await db.property.findUnique({
+      where: { id },
+      include: {
+        images: true,
+        owner: true,
+      },
+    })
+    return response
+  } catch (error) {
+    console.error("Error fetching property", error)
+  }
+}
+
+export { getProperties, postProperty, saveProperty, getUser, getPropertyById }
