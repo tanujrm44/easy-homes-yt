@@ -155,4 +155,33 @@ async function getPropertyById(id: number) {
   }
 }
 
-export { getProperties, postProperty, saveProperty, getUser, getPropertyById }
+async function sendMessage(
+  message: string,
+  senderId: string,
+  propertyId: number,
+  receiverId: number
+) {
+  try {
+    const response = await db.message.create({
+      data: {
+        message,
+        senderId: +senderId,
+        propertyId: +propertyId,
+        receiverId: +receiverId,
+      },
+    })
+
+    return response
+  } catch (error) {
+    console.error("Error Sending message", error)
+  }
+}
+
+export {
+  getProperties,
+  postProperty,
+  saveProperty,
+  getUser,
+  getPropertyById,
+  sendMessage,
+}

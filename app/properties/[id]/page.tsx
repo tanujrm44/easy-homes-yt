@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons"
 import Image from "next/image"
 import React from "react"
+import Contact from "@/components/Contact"
 
 export default async function PropertyPage({
   params,
@@ -96,9 +97,12 @@ export default async function PropertyPage({
             </Card>
           </Card>
           <Card className="mt-1">
-            <h3 className="description">Description</h3>
+            <h3>Description</h3>
             <p>{property?.description}</p>
           </Card>
+        </Col>
+        <Col xs={24} md={8}>
+          <Contact property={property ? property : null} />
         </Col>
       </Row>
     </div>
