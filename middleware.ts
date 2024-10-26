@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 
-const protectedRoutes = ["/properties/add", "/saved-properties"]
+const protectedRoutes = ["/properties/add", "/saved-properties", "/messages"]
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("next-auth.session-token")?.value

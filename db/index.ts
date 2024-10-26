@@ -14,3 +14,11 @@ export type PropertyWithImagesAndOwner = Prisma.PropertyGetPayload<{
     owner: true
   }
 }>
+
+export type MessageType = Prisma.MessageGetPayload<{
+  include: {
+    sender: true
+    receiver: true
+    property: true
+  }
+}>

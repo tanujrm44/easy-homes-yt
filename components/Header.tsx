@@ -2,8 +2,12 @@
 
 import React, { useEffect, useState } from "react"
 import logo from "@/public/images/logo.png"
-import { Button, Divider, Dropdown, Flex, MenuProps } from "antd"
-import { GoogleOutlined } from "@ant-design/icons"
+import { Button, Divider, Dropdown, Flex, MenuProps, Tooltip } from "antd"
+import {
+  GoogleOutlined,
+  HeartOutlined,
+  MessageOutlined,
+} from "@ant-design/icons"
 import SearchProperties from "./SearchProperties"
 import { usePathname, useRouter } from "next/navigation"
 import Link from "next/link"
@@ -80,15 +84,29 @@ export default function Header() {
           </Button>
         )}
         {session && (
-          <Dropdown menu={{ items }} trigger={["click"]}>
-            <Image
-              src={session?.user?.image as string}
-              width={40}
-              height={40}
-              alt={session?.user?.name || "user"}
-              className="profile-img"
-            />
-          </Dropdown>
+          <Flex align="center" gap={22}>
+            <Tooltip title="Messages">
+              <MessageOutlined
+                className="header-icons"
+                onClick={() => router.push("/messages")}
+              />
+            </Tooltip>
+            <Tooltip title="Saved Properties">
+              <HeartOutlined
+                className="header-icons"
+                onClick={() => router.push("/saved-properties")}
+              />
+            </Tooltip>
+            <Dropdown menu={{ items }} trigger={["click"]}>
+              <Image
+                src={session?.user?.image as string}
+                width={40}
+                height={40}
+                alt={session?.user?.name || "user"}
+                className="profile-img"
+              />
+            </Dropdown>
+          </Flex>
         )}
       </div>
       {pathname === "/" && (

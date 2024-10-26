@@ -132,6 +132,13 @@ async function getUser(userId: number) {
             images: true,
           },
         },
+        receivedMessages: {
+          include: {
+            sender: true,
+            receiver: true,
+            property: true,
+          },
+        },
       },
     })
     return user
@@ -177,6 +184,23 @@ async function sendMessage(
   }
 }
 
+async function markAsRead(messageId: number) {
+  try {
+    const response = await db.message.update({
+      where: {
+        id: messageId,
+      },
+      data: {
+        isRead: true,
+      },
+    })
+
+    return response
+  } catch (error) {
+    console.error("Error marking message as read", error)
+  }
+}
+
 export {
   getProperties,
   postProperty,
@@ -184,4 +208,5 @@ export {
   getUser,
   getPropertyById,
   sendMessage,
+  markAsRead,
 }
