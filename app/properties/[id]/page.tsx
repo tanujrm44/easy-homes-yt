@@ -9,6 +9,7 @@ import {
 import Image from "next/image"
 import React from "react"
 import Contact from "@/components/Contact"
+import Map from "@/components/Map"
 
 export default async function PropertyPage({
   params,
@@ -100,6 +101,9 @@ export default async function PropertyPage({
             <h3>Description</h3>
             <p>{property?.description}</p>
           </Card>
+          <Map
+            address={`${property?.street}, ${property?.city}, ${property?.state}, ${property?.zipcode}`}
+          />
         </Col>
         <Col xs={24} md={8}>
           <Contact property={property ? property : null} />

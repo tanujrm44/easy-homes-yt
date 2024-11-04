@@ -5,6 +5,8 @@ import Image from "next/image"
 import { db } from "@/db"
 import PropertyCards from "@/components/PropertyCards"
 import Link from "next/link"
+import { rubik } from "@/fonts"
+import ctaImage from "../public/images/cta.avif"
 
 export default async function Homepage() {
   const featuredProperties = await db.property.findMany({
@@ -14,7 +16,23 @@ export default async function Homepage() {
     include: { images: true },
     take: 3,
   })
-  console.log(featuredProperties)
+
+  const PropertiesWithMessageCount = await db.property.findMany({
+    include: {
+      _count: {
+        select: {
+          messages: true,
+        },
+      },
+      images: true,
+    },
+  })
+
+  const onDemandProperties = PropertiesWithMessageCount.sort(
+    (a, b) => b._count.messages - a._count.messages
+  ).slice(0, 3)
+
+  console.log(onDemandProperties)
   return (
     <>
       <div className="container">
@@ -71,6 +89,47 @@ export default async function Homepage() {
             View Properties
           </Button>
         </Link>
+      </div>
+      <div className="section container">
+        <h1 className="heading"> Properties on Demand</h1>
+        <p className="paragraph mb-1 text-center">
+          Check out out most popular properties that are high on demand.
+        </p>
+        <PropertyCards properties={onDemandProperties} layout={"vertical"} />
+      </div>
+      <div className="section container-padding cta">
+        <Row gutter={[32, 32]}>
+          <Col xs={24} md={16}>
+            <div className="cta-container">
+              <h2 className={rubik.className}>
+                {" "}
+                Ready to Find Your <strong>Dream Home?</strong>
+              </h2>
+              <p className={`cta-subtitle ${rubik.className}`}>
+                We offer a wide range of properties to suit all your needs.
+                <br />
+                Whether you're looking to buy, sell, or rent, we are here to
+                help.
+              </p>
+              <Link href={"/properties"}>
+                <Button type="primary" size="large" className="view-btn">
+                  {" "}
+                  Explore Properties
+                </Button>
+              </Link>
+            </div>
+          </Col>
+          <Col xs={24} md={8}>
+            <Image
+              src={ctaImage}
+              width={0}
+              height={0}
+              sizes="100vw"
+              alt="About Us"
+              className="cta-image expand"
+            />
+          </Col>
+        </Row>
       </div>
     </>
   )
