@@ -42,6 +42,13 @@ export default function Header() {
 
   const items: MenuProps["items"] = [
     {
+      key: "profile",
+      label: "Profile",
+      onClick: () => {
+        router.push("profile")
+      },
+    },
+    {
       key: "saved-properties",
       label: "Saved Properties",
       onClick: () => {

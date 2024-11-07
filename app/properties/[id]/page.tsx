@@ -101,9 +101,9 @@ export default async function PropertyPage({
             <h3>Description</h3>
             <p>{property?.description}</p>
           </Card>
-          <Map
+          {/* <Map
             address={`${property?.street}, ${property?.city}, ${property?.state}, ${property?.zipcode}`}
-          />
+          /> */}
         </Col>
         <Col xs={24} md={8}>
           <Contact property={property ? property : null} />

@@ -201,6 +201,20 @@ async function markAsRead(messageId: number) {
   }
 }
 
+async function getUserProperties(userId: number) {
+  try {
+    const res = await db.property.findMany({
+      where: {
+        ownerId: userId,
+      },
+      include: { images: true },
+    })
+    return res
+  } catch (error) {
+    console.error("Failed to fetch properties", error)
+  }
+}
+
 export {
   getProperties,
   postProperty,
@@ -209,4 +223,5 @@ export {
   getPropertyById,
   sendMessage,
   markAsRead,
+  getUserProperties,
 }
