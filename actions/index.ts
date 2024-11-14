@@ -215,6 +215,26 @@ async function getUserProperties(userId: number) {
   }
 }
 
+async function togglePropertySold(propertyId: number) {
+  try {
+    const property = await db.property.findUnique({
+      where: { id: propertyId },
+    })
+    const propertyAlreadySold = property?.isSold
+    await db.property.update({
+      where: { id: propertyId },
+      data: {
+        isSold: !propertyAlreadySold,
+      },
+    })
+    return propertyAlreadySold
+      ? "Property Activated"
+      : "Property marked as sold"
+  } catch (error) {
+    console.error("Failed to update property", error)
+  }
+}
+
 export {
   getProperties,
   postProperty,
@@ -224,4 +244,5 @@ export {
   sendMessage,
   markAsRead,
   getUserProperties,
+  togglePropertySold,
 }

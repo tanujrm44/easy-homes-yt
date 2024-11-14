@@ -1,11 +1,17 @@
 "use client"
 
-import { FloatButton } from "antd"
-import { HeartOutlined, HeartFilled } from "@ant-design/icons"
+import { FloatButton, Tooltip } from "antd"
+import {
+  HeartOutlined,
+  HeartFilled,
+  EditOutlined,
+  CheckCircleOutlined,
+  CheckCircleFilled,
+} from "@ant-design/icons"
 import React, { useEffect, useState } from "react"
 import { PropertyWithImages } from "@/db"
 import { useSession } from "next-auth/react"
-import { getUser, saveProperty } from "@/actions"
+import { getUser, saveProperty, togglePropertySold } from "@/actions"
 import { useMessage } from "@/context/MessageContext"
 
 export default function SaveProperty({
@@ -18,6 +24,7 @@ export default function SaveProperty({
   const [savedProperties, setSavedProperties] = useState<PropertyWithImages[]>(
     []
   )
+  const [isSold, setIsSold] = useState<boolean>(property.isSold)
 
   useEffect(() => {
     fetchUserProperties()
@@ -33,6 +40,7 @@ export default function SaveProperty({
   }
 
   const isPropertySaved = savedProperties.some((p) => p.id === property.id)
+  const isPropertyOwner = session && +session?.user.id === property.ownerId
 
   const handleSaveProperty = async (propertyId: number, email: string) => {
     if (!email) {
@@ -49,27 +57,76 @@ export default function SaveProperty({
     }
   }
 
-  return (
-    <FloatButton
-      icon={
-        isPropertySaved ? (
-          <HeartFilled
+  async function handleTogglePropertySold(propertyId: number) {
+    try {
+      const response = await togglePropertySold(propertyId)
+      if (response) {
+        showMessage(response, "success")
+      }
+    } catch (error) {
+      showMessage("Error updating the property status", "error")
+    }
+  }
+
+  return isPropertyOwner ? (
+    <>
+      <Tooltip title="Edit Property">
+        <FloatButton
+          icon={<EditOutlined />}
+          style={{
+            position: "absolute",
+            top: 10,
+            right: 60,
+          }}
+        />
+      </Tooltip>
+      {isSold ? (
+        <Tooltip title="Activate Property">
+          <FloatButton
+            icon={<CheckCircleFilled />}
             style={{
-              color: "red",
+              position: "absolute",
+              top: 10,
+              right: 15,
             }}
           />
-        ) : (
-          <HeartOutlined />
-        )
-      }
-      style={{
-        position: "absolute",
-        top: 10,
-        right: 20,
-      }}
-      onClick={() =>
-        handleSaveProperty(property.id, session?.user.email as string)
-      }
-    />
+        </Tooltip>
+      ) : (
+        <Tooltip title="Mark As Sold">
+          <FloatButton
+            icon={<CheckCircleOutlined />}
+            style={{
+              position: "absolute",
+              top: 10,
+              right: 15,
+            }}
+          />
+        </Tooltip>
+      )}
+    </>
+  ) : (
+    <Tooltip title="Save Property">
+      <FloatButton
+        icon={
+          isPropertySaved ? (
+            <HeartFilled
+              style={{
+                color: "red",
+              }}
+            />
+          ) : (
+            <HeartOutlined />
+          )
+        }
+        style={{
+          position: "absolute",
+          top: 10,
+          right: 20,
+        }}
+        onClick={() =>
+          handleSaveProperty(property.id, session?.user.email as string)
+        }
+      />
+    </Tooltip>
   )
 }
