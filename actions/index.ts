@@ -84,7 +84,49 @@ async function postProperty(data: Property, userId: string, images: string[]) {
     throw error
   }
 }
+async function editProperty(
+  data: Property,
+  propertyId: number,
+  images: string[]
+) {
+  const existingProperty = await db.property.findUnique({
+    where: { id: propertyId },
+    include: { images: true },
+  })
 
+  if (!existingProperty) {
+    throw new Error("Property not found")
+  }
+
+  const existingImageUrls = existingProperty.images.map((img) => img.url)
+  const newImageUrls = images.filter((img) => !existingImageUrls.includes(img))
+
+  const imageUploadPromises = newImageUrls.map(async (imagesBase64: string) => {
+    const result = await cloudinary.uploader.upload(imagesBase64, {
+      folder: "easyhomes-yt",
+    })
+    return result.url
+  })
+
+  try {
+    const uploadedImages = await Promise.all(imageUploadPromises)
+    const finalImageUrls = [...existingImageUrls, ...uploadedImages]
+    const response = await db.property.update({
+      where: { id: propertyId },
+      data: {
+        ...data,
+        images: {
+          deleteMany: {},
+          create: finalImageUrls.map((url) => ({ url })),
+        },
+      },
+    })
+    return response
+  } catch (error) {
+    console.log("Error editing property", error)
+    throw error
+  }
+}
 async function saveProperty(propertyId: number, email: string) {
   try {
     const user = await db.user.findUnique({
@@ -245,4 +287,5 @@ export {
   markAsRead,
   getUserProperties,
   togglePropertySold,
+  editProperty,
 }

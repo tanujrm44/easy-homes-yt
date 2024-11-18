@@ -13,12 +13,14 @@ import { PropertyWithImages } from "@/db"
 import { useSession } from "next-auth/react"
 import { getUser, saveProperty, togglePropertySold } from "@/actions"
 import { useMessage } from "@/context/MessageContext"
+import { useRouter } from "next/navigation"
 
 export default function SaveProperty({
   property,
 }: {
   property: PropertyWithImages
 }) {
+  const router = useRouter()
   const { data: session } = useSession()
   const { showMessage } = useMessage()
   const [savedProperties, setSavedProperties] = useState<PropertyWithImages[]>(
@@ -78,6 +80,7 @@ export default function SaveProperty({
             top: 10,
             right: 60,
           }}
+          onClick={() => router.push(`/properties/${property.id}/edit`)}
         />
       </Tooltip>
       {isSold ? (

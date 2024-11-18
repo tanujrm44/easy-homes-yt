@@ -6,11 +6,14 @@ const protectedRoutes = [
   "/messages",
   "/profile",
 ]
+const editPropertyRouteRegex = /^\/properties\/\d+\/edit$/
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("next-auth.session-token")?.value
 
-  const isProtectedRoute = protectedRoutes.includes(req.nextUrl.pathname)
+  const isProtectedRoute =
+    protectedRoutes.includes(req.nextUrl.pathname) ||
+    editPropertyRouteRegex.test(req.nextUrl.pathname)
 
   if (!token && isProtectedRoute) {
     const loginUrl = new URL("/", req.url)
