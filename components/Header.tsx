@@ -116,7 +116,7 @@ export default function Header() {
           </Flex>
         )}
       </div>
-      {pathname === "/" && (
+      {(pathname === "/" || pathname.startsWith("/search-results")) && (
         <>
           <hr />
           <div className="hero">

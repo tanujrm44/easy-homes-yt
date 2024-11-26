@@ -277,6 +277,25 @@ async function togglePropertySold(propertyId: number) {
   }
 }
 
+async function searchResults(type: string, location: string) {
+  try {
+    const res = await db.property.findMany({
+      where: {
+        type: type as Prisma.EnumTypeFilter,
+        OR: [
+          { state: { contains: location } },
+          { city: { contains: location } },
+          { street: { contains: location } },
+        ],
+      },
+      include: { images: true },
+    })
+    return res
+  } catch (error) {
+    console.error("Failed to search properties", error)
+  }
+}
+
 export {
   getProperties,
   postProperty,
@@ -288,4 +307,5 @@ export {
   getUserProperties,
   togglePropertySold,
   editProperty,
+  searchResults,
 }
