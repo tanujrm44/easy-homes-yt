@@ -20,6 +20,7 @@ import React, { useState } from "react"
 import type { GetProp, UploadFile, UploadProps } from "antd"
 import { RcFile } from "antd/es/upload"
 import { useMessage } from "@/context/MessageContext"
+import BackButton from "@/components/BackButton"
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0]
 
@@ -27,6 +28,7 @@ export default function AddProperty() {
   const { data: session } = useSession()
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const { showMessage } = useMessage()
+  const [form] = Form.useForm()
 
   console.log(fileList)
 
@@ -93,7 +95,9 @@ export default function AddProperty() {
         List your property for free and reach out to our potential buyers and
         sellers.
       </p>
+      <BackButton />
       <Form
+        form={form}
         onFinish={onFinish}
         labelCol={{ span: 6 }}
         wrapperCol={{ span: 14 }}
@@ -292,7 +296,7 @@ export default function AddProperty() {
             <Button type="primary" htmlType="submit">
               Submit
             </Button>
-            <Button>Reset</Button>
+            <Button onClick={() => form.resetFields()}>Reset</Button>
           </Space>
         </Card>
       </Form>

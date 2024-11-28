@@ -111,10 +111,9 @@ export default async function Homepage() {
                 Whether you're looking to buy, sell, or rent, we are here to
                 help.
               </p>
-              <Link href={"/properties"}>
+              <Link href="/properties" className="flex-center">
                 <Button type="primary" size="large" className="view-btn">
-                  {" "}
-                  Explore Properties
+                  View Properties
                 </Button>
               </Link>
             </div>

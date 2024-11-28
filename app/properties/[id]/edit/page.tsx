@@ -23,6 +23,7 @@ import { RcFile } from "antd/es/upload"
 import { useMessage } from "@/context/MessageContext"
 import { PropertyWithImagesAndOwner } from "@/db"
 import dayjs from "dayjs"
+import BackButton from "@/components/BackButton"
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0]
 
@@ -141,6 +142,7 @@ export default function EditProperty({ params }: { params: { id: string } }) {
   return (
     <div className="formContainer">
       <h1 className="heading">Edit Property</h1>
+      <BackButton />
       <Form
         form={form}
         onFinish={onFinish}
@@ -236,7 +238,15 @@ export default function EditProperty({ params }: { params: { id: string } }) {
               },
             ]}
           >
-            <InputNumber addonBefore={"Rs"} />
+            <InputNumber
+              addonBefore={"Rs"}
+              formatter={(value) =>
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              parser={(value) =>
+                value?.replace(/\$\s?|(,*)/g, "") as unknown as number
+              }
+            />
           </Form.Item>
           <Form.Item
             label="BHK"
@@ -266,7 +276,15 @@ export default function EditProperty({ params }: { params: { id: string } }) {
               },
             ]}
           >
-            <InputNumber addonAfter={"sqft"} />
+            <InputNumber
+              addonAfter={"sqft"}
+              formatter={(value) =>
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              parser={(value) =>
+                value?.replace(/\$\s?|(,*)/g, "") as unknown as number
+              }
+            />
           </Form.Item>
           <Form.Item
             label="Parking"
@@ -341,7 +359,7 @@ export default function EditProperty({ params }: { params: { id: string } }) {
             <Button type="primary" htmlType="submit">
               Submit
             </Button>
-            <Button>Reset</Button>
+            <Button onClick={() => form.resetFields()}>Reset</Button>
           </Space>
         </Card>
       </Form>

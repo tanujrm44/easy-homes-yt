@@ -20,6 +20,7 @@ import {
 import React, { useEffect, useState } from "react"
 import { LoadingOutlined } from "@ant-design/icons"
 import { useMessage } from "@/context/MessageContext"
+import BackButton from "@/components/BackButton"
 
 export default function Properties() {
   const [sortOrder, setSortOrder] = useState("latest")
@@ -68,6 +69,7 @@ export default function Properties() {
       <div className="sticky-container mt-1">
         <Row gutter={[16, 16]} wrap>
           <Col xs={24} md={8} className="sticky-column">
+            <BackButton />
             <Card title="Filters">
               <Form form={filterForm} onFinish={(values) => setFilters(values)}>
                 <Form.Item name={"type"}>

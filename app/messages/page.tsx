@@ -5,17 +5,20 @@ import { MessageType } from "@/db"
 import { Message } from "@prisma/client"
 import { Avatar, Breadcrumb, Card, Tooltip } from "antd"
 import { useSession } from "next-auth/react"
-import { CheckCircleOutlined } from "@ant-design/icons"
+import { CheckCircleOutlined, LoadingOutlined } from "@ant-design/icons"
 import React, { useEffect, useState } from "react"
 import { revalidatePath } from "next/cache"
+import BackButton from "@/components/BackButton"
 
 export default function Messages() {
   const { data: session } = useSession()
   const [messages, setMessages] = useState<MessageType[]>([])
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     async function fetchMessages() {
       try {
+        setIsLoading(true)
         const user = await getUser(parseInt(session?.user?.id!))
         if (user) {
           setMessages(user.receivedMessages)
@@ -23,6 +26,8 @@ export default function Messages() {
         console.log(user)
       } catch (error) {
         console.log("Error fetching user", error)
+      } finally {
+        setIsLoading(false)
       }
     }
     fetchMessages()
@@ -63,10 +68,12 @@ export default function Messages() {
           },
         ]}
       />
+      <BackButton />
       <p className="message-count">
         You have {messages.filter((message) => message.isRead === false).length}{" "}
         unread messages
       </p>
+      {isLoading && <LoadingOutlined className="loading" />}
       <div className="card-item">
         {messages.map((message) => (
           <Card className={!message.isRead ? "read w-full" : "w-full"}>

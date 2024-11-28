@@ -135,10 +135,16 @@ function PropertyContent({ property }: { property: PropertyWithImages }) {
     <>
       <div className="card-header">
         <p className="card-header-title">For {property.type.toUpperCase()}</p>
-        <p className="card-header-price">₹{property.price.toLocaleString()}</p>
+        <p className="card-header-price">
+          ₹{property.price.toLocaleString()}
+          {property.type === "RENT" && "/month"}
+        </p>
       </div>
       <Tag icon={<HomeOutlined />} color="blue">
         {property.bhk.split("_").join(" ")}
+      </Tag>
+      <Tag icon={<HomeOutlined />} color="blue">
+        {property.propertyType}
       </Tag>
       <Tag icon={<ExpandAltOutlined />} color="blue">
         {property.area} sqft

@@ -1,6 +1,7 @@
 "use client"
 
 import { searchResults } from "@/actions"
+import BackButton from "@/components/BackButton"
 import PropertyCards from "@/components/PropertyCards"
 import { PropertyWithImages } from "@/db"
 import { useSearchParams } from "next/navigation"
@@ -31,7 +32,7 @@ export default function SearchResults() {
       <h1 className="heading">
         {properties.length || 0} properties in {location} for {propertyType}
       </h1>
-
+      <BackButton />
       <PropertyCards properties={properties} layout={"vertical"} />
     </div>
   )

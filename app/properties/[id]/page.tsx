@@ -10,6 +10,8 @@ import Image from "next/image"
 import React from "react"
 import Contact from "@/components/Contact"
 import Map from "@/components/Map"
+import BackButton from "@/components/BackButton"
+import FloatIcons from "@/components/FloatIcons"
 
 export default async function PropertyPage({
   params,
@@ -38,6 +40,8 @@ export default async function PropertyPage({
           },
         ]}
       />
+      <BackButton />
+
       <Carousel autoplay arrows>
         {property?.images.map((image) => (
           <Image
@@ -60,6 +64,7 @@ export default async function PropertyPage({
               <h2 className="heading">{property?.name}</h2>
               <p className="card-header-price">
                 ₹{property?.price.toLocaleString()}
+                {property?.type === "RENT" && "/month"}
               </p>
             </div>
             <p className="paragraph mb-1">
@@ -109,6 +114,7 @@ export default async function PropertyPage({
           <Contact property={property ? property : null} />
         </Col>
       </Row>
+      {property && <FloatIcons property={property} />}
     </div>
   )
 }
