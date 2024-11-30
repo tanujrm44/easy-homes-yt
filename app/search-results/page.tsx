@@ -5,12 +5,12 @@ import BackButton from "@/components/BackButton"
 import PropertyCards from "@/components/PropertyCards"
 import { PropertyWithImages } from "@/db"
 import { useSearchParams } from "next/navigation"
-import React, { useEffect, useState } from "react"
+import React, { Suspense, useEffect, useState } from "react"
 
-export default function SearchResults() {
+function SearchResults() {
   const searchParams = useSearchParams()
-  const propertyType = searchParams.get("propertyType") as string
-  const location = searchParams.get("location") as string
+  const propertyType = searchParams.get("propertyType") || "" // Default to empty string if not found
+  const location = searchParams.get("location") || "" // Default to empty string if not found
   const [properties, setProperties] = useState<PropertyWithImages[]>([])
 
   useEffect(() => {
@@ -22,7 +22,9 @@ export default function SearchResults() {
         console.error("Error fetching properties:", error)
       }
     }
-    fetchProperties()
+    if (propertyType && location) {
+      fetchProperties()
+    }
   }, [propertyType, location])
 
   console.log(properties)
@@ -35,5 +37,13 @@ export default function SearchResults() {
       <BackButton />
       <PropertyCards properties={properties} layout={"vertical"} />
     </div>
+  )
+}
+
+export default function SearchResultsPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SearchResults />
+    </Suspense>
   )
 }

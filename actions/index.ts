@@ -43,7 +43,6 @@ async function getProperties(
       filters.preferred_tenants as Prisma.EnumPreferredTenantsFilter,
     isSold: false,
   }
-  console.log(filterConditions)
   try {
     const properties = await db.property.findMany({
       include: {
@@ -55,8 +54,8 @@ async function getProperties(
     })
     return properties
   } catch (error) {
-    throw error
     console.error(error)
+    throw error
   }
 }
 

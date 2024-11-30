@@ -20,6 +20,7 @@ export default async function PropertyPage({
 }) {
   const id = +params.id
   const property = await getPropertyById(id)
+  console.log("🚀 ~ property:")
 
   return (
     <div className="container">

@@ -39,7 +39,6 @@ export default function EditProperty({ params }: { params: { id: string } }) {
   const fetchPropertyDetails = async () => {
     try {
       const property = await getPropertyById(+params.id)
-      console.log(property)
       if (property) {
         setPropertyDetails(property)
         const existingImages = property?.images?.map((img, index) => ({

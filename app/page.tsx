@@ -16,8 +16,9 @@ export default async function Homepage() {
     include: { images: true },
     take: 3,
   })
+  console.log("homepage")
 
-  const PropertiesWithMessageCount = await db.property.findMany({
+  const propertiesWithMessageCount = await db.property.findMany({
     include: {
       _count: {
         select: {
@@ -28,9 +29,9 @@ export default async function Homepage() {
     },
   })
 
-  const onDemandProperties = PropertiesWithMessageCount.sort(
-    (a, b) => b._count.messages - a._count.messages
-  ).slice(0, 3)
+  const onDemandProperties = propertiesWithMessageCount
+    .sort((a, b) => b._count.messages - a._count.messages)
+    .slice(0, 3)
 
   console.log(onDemandProperties)
   return (
