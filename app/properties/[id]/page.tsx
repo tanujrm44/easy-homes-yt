@@ -1,4 +1,4 @@
-import { getPropertyById } from "@/actions"
+import { getProperties, getPropertyById } from "@/actions"
 import { Breadcrumb, Card, Carousel, Col, Divider, Flex, Row } from "antd"
 import {
   HomeOutlined,
@@ -12,6 +12,21 @@ import Contact from "@/components/Contact"
 import Map from "@/components/Map"
 import BackButton from "@/components/BackButton"
 import FloatIcons from "@/components/FloatIcons"
+
+export async function generateStaticParams() {
+  const properties = await getProperties()
+  return properties.map((p) => ({
+    id: p.id,
+  }))
+}
+
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const property = await getPropertyById(+params.id)
+  return {
+    title: `${property?.name} | Easy Homes`,
+    description: property?.description,
+  }
+}
 
 export default async function PropertyPage({
   params,

@@ -7,9 +7,9 @@ import { Prisma, Property } from "@prisma/client"
 import { disconnect } from "process"
 
 async function getProperties(
-  filters: FilterValues,
-  sortOrder: string,
-  propertyCount: number
+  filters: FilterValues = {},
+  sortOrder: string = "latest",
+  propertyCount: number = 0
 ) {
   const orderBy: Prisma.PropertyOrderByWithRelationInput =
     sortOrder === "latest"
