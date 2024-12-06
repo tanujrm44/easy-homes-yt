@@ -1,22 +1,12 @@
-import { getProperties } from "@/actions"
-
-export default async function sitemap() {
-  const properties = await getProperties()
-
-  const propertyUrls = properties.map((p) => ({
-    url: `https://easy-homes-yt.vercel.app/properties1/${p.id}`,
-    lastModified: new Date(),
-  }))
+export default function sitemap() {
   return [
     {
       url: "https://easy-homes-yt.vercel.app",
-      lastModified: new Date(),
+      lastModified: new Date().toISOString(),
     },
     {
       url: "https://easy-homes-yt.vercel.app/properties",
-      lastModified: new Date(),
+      lastModified: new Date().toISOString(),
     },
-
-    ...propertyUrls,
   ]
 }
