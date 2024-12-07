@@ -5,7 +5,7 @@ import { PropertyWithImages } from "@/db"
 import { useSearchParams } from "next/navigation"
 import React, { Suspense, useEffect, useState } from "react"
 
-export default async function SearchResultsPage({
+async function SearchResultsPage({
   searchParams,
 }: {
   searchParams: { propertyType?: string; location?: string }
@@ -26,5 +26,23 @@ export default async function SearchResultsPage({
         <PropertyCards properties={properties} layout={"vertical"} />
       )}
     </div>
+  )
+}
+
+export default function SearchResultsPageContainer({
+  searchParams,
+}: {
+  searchParams: { propertyType?: string; location?: string }
+}) {
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    setLoading(false)
+  }, [])
+
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      {!loading && <SearchResultsPage searchParams={searchParams} />}
+    </Suspense>
   )
 }
