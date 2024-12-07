@@ -1,9 +1,7 @@
 import { searchResults } from "@/actions"
 import BackButton from "@/components/BackButton"
 import PropertyCards from "@/components/PropertyCards"
-import { PropertyWithImages } from "@/db"
-import { useSearchParams } from "next/navigation"
-import React, { Suspense, useEffect, useState } from "react"
+import React, { Suspense } from "react"
 
 async function SearchResultsPage({
   searchParams,
@@ -34,15 +32,9 @@ export default function SearchResultsPageContainer({
 }: {
   searchParams: { propertyType?: string; location?: string }
 }) {
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    setLoading(false)
-  }, [])
-
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      {!loading && <SearchResultsPage searchParams={searchParams} />}
+      <SearchResultsPage searchParams={searchParams} />
     </Suspense>
   )
 }
