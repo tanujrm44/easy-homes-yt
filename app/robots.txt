@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://easy-homes-yt.vercel.app/sitemap.xml
